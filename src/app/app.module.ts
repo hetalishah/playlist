@@ -7,8 +7,7 @@ import { GridModule, PDFModule, ExcelModule } from '@progress/kendo-angular-grid
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GridComponent } from './grid/grid.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { WindowModule } from '@progress/kendo-angular-dialog';
-import { DialogModule } from '@progress/kendo-angular-dialog';
+import { WindowModule, DialogsModule } from '@progress/kendo-angular-dialog';
 import { ChartsModule } from '@progress/kendo-angular-charts';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
@@ -31,12 +30,12 @@ import 'hammerjs';
     WindowModule,
     PDFModule,
     ExcelModule,
-    DialogModule,
     ChartsModule,
     InputsModule,
     DropDownListModule,
     ReactiveFormsModule,
-    PopupModule
+    PopupModule,
+    DialogsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -10,9 +10,9 @@
     "e2e": "ng e2e",
     "heroku-postbuild": "ng build --prod"
   },
-  "engines":{
-    "node":"11.4.0",
-    "npm":"6.4.1"
+  "engines": {
+    "node": "11.4.0",
+    "npm": "6.4.1"
   },
   "private": true,
   "dependencies": {
@@ -75,4 +75,3 @@
     "typescript": "~3.1.6"
   }
 }
-

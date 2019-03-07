@@ -42,6 +42,9 @@ import { saveAs } from '@progress/kendo-file-saver';
         windowTop = 100;
         windowLeft = 1050;
         result;
+        src;
+        length;
+        text;
         count={"popCount":0, "rockCount":0,"slowCount":0, "countryCount":0, "edmCount":0, "hiphopCount":0, "rapCount":0, "folkCount":0, "jazzCount":0, "rnbCount":0};
         pieData;
         genre = [{"genre":"Pop"}, {"genre":"Rock"}, {"genre":"Country"},{"genre": "EDM"},{"genre": "Hip Hop"},{"genre": "Rap"}, {"genre":"Folk"}, {"genre":"Jazz"}, {"genre":"R&B"},{"genre": "Slow"}];
@@ -51,7 +54,7 @@ import { saveAs } from '@progress/kendo-file-saver';
        ngOnInit() {
         this.count={"popCount":0, "rockCount":0,"slowCount":0, "countryCount":0, "edmCount":0, "hiphopCount":0, "rapCount":0, "folkCount":0, "jazzCount":0, "rnbCount":0};
         let obs=this.http.get('https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/get');
-        obs.subscribe((response)=> {
+        obs.subscribe((response: any[])=> {
           this.response= response;
           console.log(response.length);
           for(let i=0; i<response.length; i++){
@@ -207,7 +210,9 @@ import { saveAs } from '@progress/kendo-file-saver';
       });
 
       dialog.result.subscribe((result) => {
-        if (result.text==='Delete') {
+        this.result = JSON.stringify(result);
+
+        if (this.result === '{"text":"Delete","primary":true}' ) {
           dataItem.rating = dataItem.rating.toString();
             let body = JSON.stringify(dataItem);
             const removeUrl="https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/delete";
@@ -240,8 +245,7 @@ import { saveAs } from '@progress/kendo-file-saver';
           utube.subscribe((response)=> {
           this.response= response;
           let ids = response.items[0].id.videoId;
-          let iframe = document.getElementById('myIframe');
-          iframe.src ='http://www.youtube.com/embed/'+ids+'?autoplay=1';
+          let iframe = document.getElementById('myIframe').setAttribute('src','http://www.youtube.com/embed/'+ids+'?autoplay=1');
         })
       }
     }
