@@ -1,1 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
+h1, h5{
+    margin-left:300px;
+}
+
+#chart{
+ margin-top: 3px;
+ float:right;
+}
+
+#chart-export-button{
+    margin-right: 10px ;
+    float:right;
+    margin-top: 3px;
+}
+
+h4{
+    float: center;
+}
