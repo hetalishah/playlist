@@ -39,14 +39,12 @@ import { saveAs } from '@progress/kendo-file-saver';
         utube = "https://www.googleapis.com/youtube/v3/";
         opened = false;
         iframeUrl = '';
-        windowTop = 100;
-        windowLeft = 1050;
         result;
        // secret="03045024cdb28bfbdd40b139d0144c067d21b3ef659d2fd6eafcfc86b33b";
         
         count={"popCount":0, "rockCount":0,"slowCount":0, "countryCount":0, "edmCount":0, "hiphopCount":0, "rapCount":0, "folkCount":0, "jazzCount":0, "rnbCount":0};
         pieData;
-        genre = [{"genre":"Pop"}, {"genre":"Rock"}, {"genre":"Country"},{"genre": "EDM"},{"genre": "Hip Hop"},{"genre": "Rap"}, {"genre":"Folk"}, {"genre":"Jazz"}, {"genre":"R&B"},{"genre": "Slow"}];
+        genre: Array<string> = ["Pop", "Rock",  "Country",  "EDM",  "Hip Hop",  "Rap",  "Folk",  "Jazz",  "R&B",  "Slow"];
 
        constructor(public http: HttpClient,public element: ElementRef, private dialogService: DialogService) {}
 
@@ -132,16 +130,17 @@ import { saveAs } from '@progress/kendo-file-saver';
 
 
 
-       public addHandler({sender}) {
+       public addHandler({sender, rowIndex}) {
            this.closeEditor(sender);
+          
 
            this.formGroup = new FormGroup({
-               'song': new FormControl("", Validators.required),
-               'artist': new FormControl("", Validators.required),
+               'song': new FormControl("", Validators.compose([Validators.required, Validators.pattern( "[a-zA-Z0-9!@#\$%\^\&*\'][a-zA-Z0-9!@#\$%\^\&*\' ]*")])),
+               'artist': new FormControl("",Validators.compose([Validators.required, Validators.pattern( "[a-zA-Z0-9!@#\$%\^\&*\'][a-zA-Z0-9!@#\$%\^\&*\' ]*")])),
                'genre': new FormControl("",Validators.required),
                'rating': new FormControl("", Validators.compose([Validators.required, Validators.pattern("^[0-9](\.[0-9])?$|^10$")]))
            });
-
+         
            sender.addRow(this.formGroup);
        }
 
@@ -149,16 +148,15 @@ import { saveAs } from '@progress/kendo-file-saver';
         dataItem.rating = dataItem.rating.toString();
         
            this.closeEditor(sender);
+           
 
            this.formGroup = new FormGroup({
-               'song': new FormControl(dataItem.song, Validators.required),
-               'artist': new FormControl(dataItem.artist, Validators.required),
+               'song': new FormControl(dataItem.song, Validators.compose([Validators.required, Validators.pattern( "[a-zA-Z0-9!@#\$%\^\&*\'][a-zA-Z0-9!@#\$%\^\&*\' ]*")])),
+               'artist': new FormControl(dataItem.artist, Validators.compose([Validators.required, Validators.pattern( "[a-zA-Z0-9!@#\$%\^\&*\'][a-zA-Z0-9!@#\$%\^\&*\' ]*")])),
                'genre': new FormControl(dataItem.genre, Validators.required),
-               'rating': new FormControl(dataItem.rating, Validators.compose([Validators.required, Validators.pattern("^[0-9](\.[0-9])?$|^10{1,2}$")]))
+               'rating': new FormControl(dataItem.rating, Validators.compose([Validators.required, Validators.pattern("^[0-9](\.[0-9])?$|^10$")]))
            });
-
            this.editedRowIndex = rowIndex;
-          
            sender.editRow(rowIndex, this.formGroup);
     
        }
@@ -170,7 +168,6 @@ import { saveAs } from '@progress/kendo-file-saver';
        public saveHandler({sender, rowIndex, formGroup, isNew, dataItem}) {
          if(isNew){
            let jsong = (dataItem);
-           dataItem.genre=dataItem.genre.genre;
            const postUrl="https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/post";
            sender.closeRow(rowIndex);
            this.http.post<Song>(postUrl, jsong)
@@ -182,7 +179,9 @@ import { saveAs } from '@progress/kendo-file-saver';
 
        else{
         dataItem.rating = dataItem.rating.toString();
-        this.formGroup.value.genre=this.formGroup.value.genre.genre;
+        if(this.formGroup.value.genre.genre){
+          this.formGroup.value.genre=this.formGroup.value.genre.genre;
+        }
         let edit = [ dataItem, this.formGroup.value ];
         const putUrl="https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/put";
         sender.closeRow(rowIndex);
@@ -218,7 +217,7 @@ import { saveAs } from '@progress/kendo-file-saver';
             .subscribe(res => {
              this.ngOnInit();
            },
-            err=>{console.log(err);});
+            err=>{console.log(err);}); 
         } 
     });
         }
@@ -235,15 +234,15 @@ import { saveAs } from '@progress/kendo-file-saver';
           this.ngOnInit();
         }
     
-        public open({dataItem, columnIndex}) {
-          if(columnIndex!==4){
+        public open({dataItem, columnIndex, editedRowIndex, rowIndex}) {
+          if(columnIndex!==4 && !this.editedRowIndex && rowIndex!== -1){
           this.opened = true;
           let query=dataItem.song+' '+dataItem.artist;
           let utube=this.http.get<any>(`${this.utube}search?q=${query}&maxResults=1&type=video&part=snippet,id&key=${this.api_key}&videoEmbeddable=true`);
           utube.subscribe((response)=> {
           this.response= response;
           let ids = response.items[0].id.videoId;
-          let iframe = document.getElementById('myIframe').setAttribute('src','http://www.youtube.com/embed/'+ids+'?autoplay=1');
+          let iframe = document.getElementById('myIframe').setAttribute('src','http://www.youtube.com/embed/'+ids+'?autoplay=1&mute=1&enablejsapi=1');
         })
       }
     }

@@ -10,7 +10,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { WindowModule, DialogsModule } from '@progress/kendo-angular-dialog';
 import { ChartsModule } from '@progress/kendo-angular-charts';
 import { InputsModule } from '@progress/kendo-angular-inputs';
-import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
+import { DropDownListModule, DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PopupModule } from '@progress/kendo-angular-popup';
 
@@ -35,7 +35,8 @@ import 'hammerjs';
     DropDownListModule,
     ReactiveFormsModule,
     PopupModule,
-    DialogsModule
+    DialogsModule,
+    DropDownsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

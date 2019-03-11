@@ -43,10 +43,7 @@
             let-column="column"
             let-formGroup="formGroup">
             <kendo-dropdownlist
-            [defaultItem]="{genre:'Select Genre'}"
             [data]="genre"
-            textField="genre"
-            valueField=""
             [valuePrimitive]="true"
             [formControl]="formGroup.get('genre')"
           >
@@ -60,7 +57,7 @@
 
       <kendo-grid-command-column title="Command" width="40%">
         <ng-template kendoGridCellTemplate let-isNew="isNew">
-            <button kendoGridEditCommand [primary]="true">Edit</button>&nbsp;
+            <button kendoGridEditCommand class="k-grid-ignore-click" [primary]="true">Edit</button>&nbsp;
             <button kendoGridRemoveCommand>Delete</button>
             <button kendoGridSaveCommand [disabled]="formGroup?.invalid">{{ isNew ? 'Add' : 'Update' }}</button>
             <button kendoGridCancelCommand>{{ isNew ? 'Discard' : 'Cancel' }}</button>
@@ -83,17 +80,18 @@
   </kendo-grid>
   <div kendoDialogContainer></div>
 
-  <kendo-window title="Youtube" [(top)]="windowTop" [(left)]="windowLeft" *ngIf="opened" (close)="close()" [height]="460" [width]="690">
+  <kendo-dialog id="window" title="Youtube"  *ngIf="opened" (close)="close()" [height]="460" [width]="690">
       <iframe id="myIframe" src="about:blank" width="100%" height="95%"  frameborder="0" allowfullscreen></iframe>
-    </kendo-window>
+    </kendo-dialog>
  
 </div>
 
 
-<div>
-  <button id="chart-export-button"  (click)="exportChart()">
-    Export as Image
-  </button>
+<div id="fullchart">
+    <button id="chart-export-button"  (click)="exportChart()">
+        Export as Image
+      </button>
+ 
     <kendo-chart id="chart" #chart style= "width:650px;" 
     [seriesColors]="['#f44242', ' #f48041', '#f4be41', '#d0f441', '#64f441', '#41f4b5','#41b2f4','#236abc', '#7e28a3','#d725f7']">
       <kendo-chart-title text="Genre Pie Chart"></kendo-chart-title>  
@@ -111,8 +109,10 @@
              {{category}} : {{ value }}
           </ng-template>
         </kendo-chart-tooltip>
+        
 
       </kendo-chart>
+      
      
 
 </div>
