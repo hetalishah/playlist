@@ -24,7 +24,7 @@ import { saveAs } from '@progress/kendo-file-saver';
         formGroup: FormGroup;
         private editedRowIndex: number;
         show = false;
-        response: any;
+        response: any=[];
         res: any;
         gridData: GridDataResult;
         pageSize = 15;
