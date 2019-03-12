@@ -1,14 +1,12 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders  } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { GridDataResult, PageChangeEvent, DataStateChangeEvent } from '@progress/kendo-angular-grid';
-import { SortDescriptor, orderBy } from '@progress/kendo-data-query';
+import { SortDescriptor } from '@progress/kendo-data-query';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Song } from './model';
-import { Statement } from '@angular/compiler';
-import { process, State } from '@progress/kendo-data-query';
+import { process } from '@progress/kendo-data-query';
 import { ExcelExportData } from '@progress/kendo-angular-excel-export';
-import { DialogService, DialogRef, DialogCloseResult } from '@progress/kendo-angular-dialog';
+import { DialogService, DialogRef } from '@progress/kendo-angular-dialog';
 import { ChartComponent } from '@progress/kendo-angular-charts';
 import { saveAs } from '@progress/kendo-file-saver';
 
@@ -24,15 +22,15 @@ import { saveAs } from '@progress/kendo-file-saver';
         formGroup: FormGroup;
         private editedRowIndex: number;
         show = false;
-        response: any;
-        res: any;
+        response: any=[];
+        res: any=[];
         gridData: GridDataResult;
         pageSize = 15;
         pageSizes = true;
         skip = 0;
         allowUnsort = true;
         sort: SortDescriptor[] = [];
-        private data: Object[];
+        private data: Object;
         filter: any;
         state: any;
         api_key = "AIzaSyDXAz0m9Fp7wSIu2ANrRxGJjaoQNcEhkkU";
@@ -40,7 +38,6 @@ import { saveAs } from '@progress/kendo-file-saver';
         opened = false;
         iframeUrl = '';
         result;
-       // secret="03045024cdb28bfbdd40b139d0144c067d21b3ef659d2fd6eafcfc86b33b";
         
         count={"popCount":0, "rockCount":0,"slowCount":0, "countryCount":0, "edmCount":0, "hiphopCount":0, "rapCount":0, "folkCount":0, "jazzCount":0, "rnbCount":0};
         pieData;
@@ -54,7 +51,7 @@ import { saveAs } from '@progress/kendo-file-saver';
         let obs=this.http.get('https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/get');
         obs.subscribe((response: any[])=> {
           this.response= response;
-          for(let i=0; i<response.length; i++){
+          for(let i in this.response){
             this.response[i].rating=(parseFloat(response[i].rating));
             let k=response[i].genre;
             if(k==='Pop')this.count.popCount++;
