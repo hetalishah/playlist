@@ -1,12 +1,14 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { GridDataResult, PageChangeEvent, DataStateChangeEvent } from '@progress/kendo-angular-grid';
-import { SortDescriptor } from '@progress/kendo-data-query';
+import { SortDescriptor, orderBy } from '@progress/kendo-data-query';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Song } from './model';
+import { Statement } from '@angular/compiler';
 import { process, State } from '@progress/kendo-data-query';
 import { ExcelExportData } from '@progress/kendo-angular-excel-export';
-import { DialogService, DialogRef } from '@progress/kendo-angular-dialog';
+import { DialogService, DialogRef, DialogCloseResult } from '@progress/kendo-angular-dialog';
 import { ChartComponent } from '@progress/kendo-angular-charts';
 import { saveAs } from '@progress/kendo-file-saver';
 
@@ -22,15 +24,15 @@ import { saveAs } from '@progress/kendo-file-saver';
         formGroup: FormGroup;
         private editedRowIndex: number;
         show = false;
-        response: any=[];
-        res: any=[];
+        response: any;
+        res: any;
         gridData: GridDataResult;
         pageSize = 15;
         pageSizes = true;
         skip = 0;
         allowUnsort = true;
         sort: SortDescriptor[] = [];
-        private data: Object;
+        private data: Object[];
         filter: any;
         state: any;
         api_key = "AIzaSyDXAz0m9Fp7wSIu2ANrRxGJjaoQNcEhkkU";
@@ -38,9 +40,11 @@ import { saveAs } from '@progress/kendo-file-saver';
         opened = false;
         iframeUrl = '';
         result;
+       // secret="03045024cdb28bfbdd40b139d0144c067d21b3ef659d2fd6eafcfc86b33b";
         
         count={"popCount":0, "rockCount":0,"slowCount":0, "countryCount":0, "edmCount":0, "hiphopCount":0, "rapCount":0, "folkCount":0, "jazzCount":0, "rnbCount":0};
         pieData;
+        
         genre: Array<string> = ["Pop", "Rock",  "Country",  "EDM",  "Hip Hop",  "Rap",  "Folk",  "Jazz",  "R&B",  "Slow"];
 
        constructor(public http: HttpClient,public element: ElementRef, private dialogService: DialogService) {}
@@ -48,9 +52,9 @@ import { saveAs } from '@progress/kendo-file-saver';
        ngOnInit() {
         this.count={"popCount":0, "rockCount":0,"slowCount":0, "countryCount":0, "edmCount":0, "hiphopCount":0, "rapCount":0, "folkCount":0, "jazzCount":0, "rnbCount":0};
         let obs=this.http.get('https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/get');
-        obs.subscribe((response)=> {
+        obs.subscribe((response: any[])=> {
           this.response= response;
-          for(let i in Array.from(this.response)){
+          for(let i=0; i<response.length; i++){
             this.response[i].rating=(parseFloat(response[i].rating));
             let k=response[i].genre;
             if(k==='Pop')this.count.popCount++;
@@ -127,7 +131,7 @@ import { saveAs } from '@progress/kendo-file-saver';
 
 
 
-       public addHandler({sender}) {
+       public addHandler({sender, rowIndex}) {
            this.closeEditor(sender);
           
 
@@ -162,7 +166,7 @@ import { saveAs } from '@progress/kendo-file-saver';
             sender.closeRow(rowIndex);
        }
 
-       public saveHandler({sender, rowIndex, isNew, dataItem}) {
+       public saveHandler({sender, rowIndex, formGroup, isNew, dataItem}) {
          if(isNew){
            let jsong = (dataItem);
            const postUrl="https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/post";
@@ -231,7 +235,7 @@ import { saveAs } from '@progress/kendo-file-saver';
           this.ngOnInit();
         }
     
-        public open({dataItem, columnIndex, rowIndex}) {
+        public open({dataItem, columnIndex, editedRowIndex, rowIndex}) {
           if(columnIndex!==4 && !this.editedRowIndex && rowIndex!== -1){
           this.opened = true;
           let query=dataItem.song+' '+dataItem.artist;
