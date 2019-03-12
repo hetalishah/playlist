@@ -22,15 +22,15 @@ import { saveAs } from '@progress/kendo-file-saver';
         formGroup: FormGroup;
         private editedRowIndex: number;
         show = false;
-        response: any;
-        res: any;
+        response: any=[];
+        res: any=[];
         gridData: GridDataResult;
         pageSize = 15;
         pageSizes = true;
         skip = 0;
         allowUnsort = true;
         sort: SortDescriptor[] = [];
-        private data: Object[];
+        private data: Object;
         filter: any;
         state: any;
         api_key = "AIzaSyDXAz0m9Fp7wSIu2ANrRxGJjaoQNcEhkkU";
@@ -48,9 +48,9 @@ import { saveAs } from '@progress/kendo-file-saver';
        ngOnInit() {
         this.count={"popCount":0, "rockCount":0,"slowCount":0, "countryCount":0, "edmCount":0, "hiphopCount":0, "rapCount":0, "folkCount":0, "jazzCount":0, "rnbCount":0};
         let obs=this.http.get('https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/get');
-        obs.subscribe((response: any[])=> {
+        obs.subscribe((response)=> {
           this.response= response;
-          for(let i in this.response){
+          for(let i in Array.from(this.response)){
             this.response[i].rating=(parseFloat(response[i].rating));
             let k=response[i].genre;
             if(k==='Pop')this.count.popCount++;
