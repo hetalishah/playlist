@@ -14,6 +14,7 @@ import { ChartsModule } from '@progress/kendo-angular-charts';
 import { InputsModule } from '@progress/kendo-angular-inputs';
 import { DropDownListModule, DropDownsModule } from '@progress/kendo-angular-dropdowns';
 import { PopupModule } from '@progress/kendo-angular-popup';
+import { ButtonsModule } from '@progress/kendo-angular-buttons';
 
 import 'hammerjs';
 
@@ -37,7 +38,8 @@ import 'hammerjs';
     ReactiveFormsModule,
     PopupModule,
     DialogsModule,
-    DropDownsModule
+    DropDownsModule,
+    ButtonsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
