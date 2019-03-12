@@ -53,7 +53,7 @@ import { saveAs } from '@progress/kendo-file-saver';
         let obs=this.http.get('https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/get');
         obs.subscribe((response: any[])=> {
           this.response= response;
-          for(let i=0; i<response.length; i++){
+          for(let i in response){
             this.response[i].rating=(parseFloat(response[i].rating));
             let k=response[i].genre;
             if(k==='Pop')this.count.popCount++;
