@@ -24,7 +24,7 @@ import { saveAs } from '@progress/kendo-file-saver';
         formGroup: FormGroup;
         private editedRowIndex: number;
         show = false;
-        response: any=[];
+        response: any;
         res: any;
         gridData: GridDataResult;
         pageSize = 15;
@@ -40,7 +40,6 @@ import { saveAs } from '@progress/kendo-file-saver';
         opened = false;
         iframeUrl = '';
         result;
-       // secret="03045024cdb28bfbdd40b139d0144c067d21b3ef659d2fd6eafcfc86b33b";
         
         count={"popCount":0, "rockCount":0,"slowCount":0, "countryCount":0, "edmCount":0, "hiphopCount":0, "rapCount":0, "folkCount":0, "jazzCount":0, "rnbCount":0};
         pieData;
@@ -52,8 +51,8 @@ import { saveAs } from '@progress/kendo-file-saver';
         this.count={"popCount":0, "rockCount":0,"slowCount":0, "countryCount":0, "edmCount":0, "hiphopCount":0, "rapCount":0, "folkCount":0, "jazzCount":0, "rnbCount":0};
         let obs=this.http.get('https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/get');
         obs.subscribe((response: any[])=> {
-          this.response= response;
-          for(let i in response){
+          this.response= response.json();
+          for(let i in this.response){
             this.response[i].rating=(parseFloat(response[i].rating));
             let k=response[i].genre;
             if(k==='Pop')this.count.popCount++;
@@ -130,7 +129,7 @@ import { saveAs } from '@progress/kendo-file-saver';
 
 
 
-       public addHandler({sender, rowIndex}) {
+       public addHandler({sender}) {
            this.closeEditor(sender);
           
 
@@ -165,7 +164,7 @@ import { saveAs } from '@progress/kendo-file-saver';
             sender.closeRow(rowIndex);
        }
 
-       public saveHandler({sender, rowIndex, formGroup, isNew, dataItem}) {
+       public saveHandler({sender, rowIndex, isNew, dataItem}) {
          if(isNew){
            let jsong = (dataItem);
            const postUrl="https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/post";
@@ -234,7 +233,7 @@ import { saveAs } from '@progress/kendo-file-saver';
           this.ngOnInit();
         }
     
-        public open({dataItem, columnIndex, editedRowIndex, rowIndex}) {
+        public open({dataItem, columnIndex, rowIndex}) {
           if(columnIndex!==4 && !this.editedRowIndex && rowIndex!== -1){
           this.opened = true;
           let query=dataItem.song+' '+dataItem.artist;
