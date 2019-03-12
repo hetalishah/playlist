@@ -1,12 +1,12 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GridDataResult, PageChangeEvent, DataStateChangeEvent } from '@progress/kendo-angular-grid';
-import { SortDescriptor } from '@progress/kendo-data-query';
+import { SortDescriptor, orderBy } from '@progress/kendo-data-query';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Song } from './model';
 import { process } from '@progress/kendo-data-query';
 import { ExcelExportData } from '@progress/kendo-angular-excel-export';
-import { DialogService, DialogRef } from '@progress/kendo-angular-dialog';
+import { DialogService, DialogRef, DialogCloseResult } from '@progress/kendo-angular-dialog';
 import { ChartComponent } from '@progress/kendo-angular-charts';
 import { saveAs } from '@progress/kendo-file-saver';
 
@@ -23,7 +23,7 @@ import { saveAs } from '@progress/kendo-file-saver';
         private editedRowIndex: number;
         show = false;
         response: any=[];
-        res: any=[];
+        res: any;
         gridData: GridDataResult;
         pageSize = 15;
         pageSizes = true;
@@ -51,7 +51,7 @@ import { saveAs } from '@progress/kendo-file-saver';
         let obs=this.http.get('https://webhooks.mongodb-stitch.com/api/client/v2.0/app/app-adplz/service/http/incoming_webhook/get');
         obs.subscribe((response: any[])=> {
           this.response= response;
-          for(let i in this.response){
+          for(let i in response){
             this.response[i].rating=(parseFloat(response[i].rating));
             let k=response[i].genre;
             if(k==='Pop')this.count.popCount++;
