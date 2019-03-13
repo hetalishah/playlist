@@ -63,7 +63,6 @@ export class GridComponent {
         else if (k === 'R&B') this.count.rnbCount++;
         else if (k === 'Slow') this.count.slowCount++;
       }
-      this.show = true;
       this.loadItems();
       this.pieData = [{ category: 'Pop', value: this.count.popCount },
       { category: 'Rock', value: this.count.rockCount },
@@ -75,6 +74,7 @@ export class GridComponent {
       { category: 'Jazz', value: this.count.jazzCount },
       { category: 'R&B', value: this.count.rnbCount },
       { category: 'Slow', value: this.count.slowCount }];
+      this.show = true;
     })
   }
 

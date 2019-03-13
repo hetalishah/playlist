@@ -1,9 +1,7 @@
 <div id="grid" style="width: 900px; margin-left:100px;">
   <h5>click on song to play</h5>
   <kendo-grid [data]="gridData" [pageSize]="pageSize" (pageChange)="pageChange($event)" [pageable]="true" [skip]="skip"
-    [sortable]="{
-                allowUnsort: allowUnsort
-                }" [sort]="sort" (sortChange)="sortChange($event)" [filterable]="true" [filter]="filter"
+    [sortable]="{allowUnsort: allowUnsort}" [sort]="sort" (sortChange)="sortChange($event)" [filterable]="true" [filter]="filter"
     (dataStateChange)="dataStateChange($event)" (cellClick)="open($event)" (add)="addHandler($event)"
     (save)="saveHandler($event)" (remove)="removeHandler($event)" (cancel)="cancelHandler($event)"
     (edit)="editHandler($event)" [resizable]="true">
